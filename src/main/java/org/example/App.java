@@ -6,10 +6,18 @@ public class App {
     private final static String EXIT = "종료";
     private final static String ADD = "등록";
     private final static String PRINT = "목록";
+    private final static String REMOVE = "삭제";
 
     private Scanner scanner;
     private Deque<Saying> sayings;
     private int index;
+
+    private void init() {
+        System.out.println("==명언 앱==");
+        scanner = new Scanner(System.in);
+        sayings = new ArrayDeque<>();
+        index = 1;
+    }
 
     private void add() {
         System.out.print("명언 : ");
@@ -36,22 +44,39 @@ public class App {
         }
     }
 
-    public void run() {
-        System.out.println("==명언 앱==");
-        scanner = new Scanner(System.in);
-        sayings = new ArrayDeque<>();
-        index = 1;
+    private void remove() {
+        System.out.print("번호 : ");
+        String input = scanner.nextLine();
+        int searchIndex = Integer.parseInt(input);
 
+        if (sayings.removeIf(saying -> saying.getIndex() == searchIndex)) {
+            System.out.printf("%d번 명언이 삭제되었습니다.\n", searchIndex);
+            return;
+        }
+
+        System.out.printf("%d번 명언이 존재하지 않습니다.\n", searchIndex);
+    }
+
+    public void run() {
+        init();
+
+        label:
         while (true) {
             System.out.print("명령) ");
             String command = scanner.nextLine();
 
-            if (command.equals(EXIT)) {
-                break;
-            } else if (command.equals(ADD)) {
-                add();
-            } else if (command.equals(PRINT)) {
-                print();
+            switch (command) {
+                case EXIT:
+                    break label;
+                case ADD:
+                    add();
+                    break;
+                case PRINT:
+                    print();
+                    break;
+                case REMOVE:
+                    remove();
+                    break;
             }
         }
 
